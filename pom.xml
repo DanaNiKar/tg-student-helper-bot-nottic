@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
-    <artifactId>telegram-assistant-bot</artifactId>
+    <artifactId>tg-student-helper-bot-nottic</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -15,10 +15,15 @@
     </properties>
 
     <dependencies>
-        <!-- Telegram Bot API -->
+        <!-- Telegram Bots -->
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
+            <version>6.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-spring-boot-starter</artifactId>
             <version>6.7.0</version>
         </dependency>
 
