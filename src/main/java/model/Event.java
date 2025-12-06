@@ -5,8 +5,9 @@ public class Event {
   public long chatId;
   public String title;
   public String description;
-  public long eventTs; //epoch seconds
+  public long eventTs; // epoch seconds
   public boolean periodic;
   public int periodDays; // если periodic, период в днях
+
   public Event() {}
 }

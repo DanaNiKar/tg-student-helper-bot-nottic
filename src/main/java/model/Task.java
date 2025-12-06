@@ -7,5 +7,6 @@ public class Task {
   public String description;
   public long deadlineTs; // epoch seconds
   public boolean done;
+
   public Task() {}
 }

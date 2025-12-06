@@ -32,7 +32,7 @@ public class ReminderService {
     try {
       List<Event> all = new ArrayList<>();
       try (var conn = db.Database.getConnection();
-      var ps = conn.prepareStatement("SELECT * FROM events WHERE event_ts >= >")) {
+           var ps = conn.prepareStatement("SELECT * FROM events WHERE event_ts >= ?")) {
         ps.setLong(1, Instant.now().getEpochSecond());
         try (var rs = ps.executeQuery()) {
           while (rs.next()) {
@@ -49,7 +49,7 @@ public class ReminderService {
         }
       }
       for (Event e : all) scheduleRemindersForEvent(e);
-      System.out.println("Напоминания загружены: " + all.size());
+      System.out.println("Reminders reloaded: " + all.size());
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -66,7 +66,7 @@ public class ReminderService {
         e.eventTs = next;
         try {
           EventDao.update(e);
-        } catch (Exception ex) { ex. printStackTrace(); }
+        } catch (Exception ex) { ex.printStackTrace(); }
         eventTs = next;
       } else {
         return;
@@ -74,7 +74,6 @@ public class ReminderService {
     }
 
     List<Long> offsets = new ArrayList<>();
-    // напомнить за 7 дней, 1 день, 1 час, 10 минут до
     offsets.add(7 * 24L * 3600L);
     offsets.add(24L * 3600L);
     offsets.add(3600L);
@@ -137,13 +136,13 @@ public class ReminderService {
   }
 
   private String humanizeOffset(long secs) {
-    if (secs >= 24L * 3600L) {
-      long days = secs / (24L * 3600L);
+    if (secs >= 24L*3600L) {
+      long days = secs / (24L*3600L);
       return days + " д.";
     } else if (secs >= 3600L) {
-      return (secs / 3600L) + " ч.";
+      return (secs/3600L) + " ч.";
     } else if (secs >= 60L) {
-      return (secs / 60L) + " мин.";
+      return (secs/60L) + " мин.";
     } else {
       return secs + " сек.";
     }
@@ -160,6 +159,3 @@ public class ReminderService {
     scheduleRemindersForEvent(e);
   }
 }
-
-
-

@@ -28,14 +28,10 @@ public class StudentHelperBot extends TelegramLongPollingBot {
   }
 
   @Override
-  public String getBotUsername() {
-    return username;
-  }
+  public String getBotUsername() { return username; }
 
   @Override
-  public String getBotToken() {
-    return token;
-  }
+  public String getBotToken() { return token; }
 
   @Override
   public void onUpdateReceived(Update update) {
@@ -53,14 +49,13 @@ public class StudentHelperBot extends TelegramLongPollingBot {
             "/list_events\n" +
             "/move_event id | yyyy-MM-dd HH:mm\n" +
             "/make_periodic id | days (e.g. 7)\n" +
-            "/add_schedule dayOfweek(1-7) | HH:mm | title | place\n" +
+            "/add_schedule dayOfWeek(1-7) | HH:mm | title | place\n" +
             "/list_schedule\n" +
             "/edit_schedule id | day | HH:mm | title | place\n" +
             "\nПримеры:\n" +
             "/add_task Домашняя работа по математике | решить задачи 1-10 | 2025-12-15 23:59");
       }
       else if (txt.startsWith("/add_task")) {
-        // parse
         String body = txt.substring("/add_task".length()).trim();
         String[] parts = body.split("\\|");
         if (parts.length < 3) {
@@ -78,13 +73,13 @@ public class StudentHelperBot extends TelegramLongPollingBot {
       }
       else if (txt.startsWith("/list_tasks")) {
         List<Task> tasks = TaskDao.list(chatId);
-        if (tasks.isEmpty()) send(chatId, "Список задач пуст");
+        if (tasks.isEmpty()) send(chatId, "Список задач пуст.");
         else {
           StringBuilder sb = new StringBuilder();
           for (Task t : tasks) {
             long now = DateTimeUtil.nowEpoch();
-            long daysLeft = (t.deadlineTs - now) / ( 24 * 3600);
-            String urgent = (!t.done && (t.deadlineTs - now) <= 7 * 24 * 3600) ? " [СРОЧНО]" : "";
+            long daysLeft = (t.deadlineTs - now) / (24*3600);
+            String urgent = (!t.done && (t.deadlineTs - now) <= 7*24*3600) ? " [СРОЧНО]" : "";
             sb.append("id:").append(t.id).append(urgent).append("\n")
                 .append(t.title).append("\n")
                 .append("Дедлайн: ").append(DateTimeUtil.formatEpoch(t.deadlineTs)).append("\n")
@@ -119,7 +114,7 @@ public class StudentHelperBot extends TelegramLongPollingBot {
       }
       else if (txt.startsWith("/list_events")) {
         List<Event> events = EventDao.listUpcoming(chatId);
-        if (events.isEmpty()) send(chatId, "Нет предстоящих событий");
+        if (events.isEmpty()) send(chatId, "Нет предстоящих событий.");
         else {
           StringBuilder sb = new StringBuilder();
           for (Event e : events) {
@@ -139,30 +134,30 @@ public class StudentHelperBot extends TelegramLongPollingBot {
           long id = Long.parseLong(parts[0].trim());
           long ts = DateTimeUtil.parseToEpochSeconds(parts[1].trim());
           Event e = EventDao.findById(id);
-          if (e == null) send(chatId, "Событие не найдено");
+          if (e == null) send(chatId, "Событие не найдено.");
           else {
             e.eventTs = ts;
             EventDao.update(e);
             reminderService.scheduleEvent(e);
-            send(chatId, "Событие перемещено");
+            send(chatId, "Событие перемещено.");
           }
         }
       }
       else if (txt.startsWith("/make_periodic")) {
         String body = txt.substring("/make_periodic".length()).trim();
         String[] parts = body.split("\\|");
-        if (parts.length < 2) send(chatId, "Неверный формат. /make periodic id | days");
+        if (parts.length < 2) send(chatId, "Неверный формат. /make_periodic id | days");
         else {
           long id = Long.parseLong(parts[0].trim());
           int days = Integer.parseInt(parts[1].trim());
           Event e = EventDao.findById(id);
-          if (e == null) send(chatId, "Событие не найдено");
+          if (e == null) send(chatId, "Событие не найдено.");
           else {
             e.periodic = true;
             e.periodDays = days;
             EventDao.update(e);
             reminderService.scheduleEvent(e);
-            send(chatId, "Сделано периодическим каждые " + days + " дней");
+            send(chatId, "Сделано периодическим каждые " + days + " дней.");
           }
         }
       }
@@ -184,13 +179,13 @@ public class StudentHelperBot extends TelegramLongPollingBot {
       }
       else if (txt.startsWith("/list_schedule")) {
         List<ScheduleEntry> list = ScheduleDao.listForChat(chatId);
-        if (list.isEmpty()) send(chatId, "Расписание пустое");
+        if (list.isEmpty()) send(chatId, "Расписание пустое.");
         else {
           StringBuilder sb = new StringBuilder();
           for (ScheduleEntry s : list) {
-          sb.append("id:").append(s.id).append("\n")
-              .append("День: ").append(s.dayOfWeek).append(" Время: ").append(s.time).append("\n")
-              .append(s.title).append(" @ ").append(s.location).append("\n\n");
+            sb.append("id:").append(s.id).append("\n")
+                .append("День: ").append(s.dayOfWeek).append(" Время: ").append(s.time).append("\n")
+                .append(s.title).append(" @ ").append(s.location).append("\n\n");
           }
           send(chatId, sb.toString());
         }
@@ -210,11 +205,11 @@ public class StudentHelperBot extends TelegramLongPollingBot {
           e.location = p[4].trim();
           e.active = true;
           ScheduleDao.update(e);
-          send(chatId, "Запись изменена");
+          send(chatId, "Запись изменена.");
         }
       }
       else {
-        send(chatId, "Неизвестная команда. Напишите /start для списка команды");
+        send(chatId, "Неизвестная команда. Напишите /start для списка команд.");
       }
     } catch (SQLException ex) {
       ex.printStackTrace();

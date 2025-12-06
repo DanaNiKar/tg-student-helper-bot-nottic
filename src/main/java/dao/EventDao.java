@@ -10,9 +10,9 @@ import java.util.List;
 public class EventDao {
   public static void add(Event e) throws SQLException {
     try (Connection c = Database.getConnection();
-    PreparedStatement ps = c.prepareStatement(
-        "INSERT INTO events(chat_id, title, description, event_ts, periodic, period_days) VALUES (?,?,?,?,?,?)",
-        Statement.RETURN_GENERATED_KEYS)) {
+         PreparedStatement ps = c.prepareStatement(
+             "INSERT INTO events(chat_id, title, description, event_ts, periodic, period_days) VALUES (?,?,?,?,?,?)",
+             Statement.RETURN_GENERATED_KEYS)) {
       ps.setLong(1, e.chatId);
       ps.setString(2, e.title);
       ps.setString(3, e.description);
@@ -29,7 +29,7 @@ public class EventDao {
   public static List<Event> listUpcoming(long chatId) throws SQLException {
     List<Event> res = new ArrayList<>();
     try (Connection c = Database.getConnection();
-    PreparedStatement ps = c.prepareStatement("SELECT * FROM events WHERE chat_id = ? AND event_ts >= ? ORDER BY event_ts")) {
+         PreparedStatement ps = c.prepareStatement("SELECT * FROM events WHERE chat_id = ? AND event_ts >= ? ORDER BY event_ts")) {
       ps.setLong(1, chatId);
       ps.setLong(2, System.currentTimeMillis() / 1000);
       try (ResultSet rs = ps.executeQuery()) {
@@ -51,7 +51,7 @@ public class EventDao {
 
   public static void update(Event e) throws SQLException {
     try (Connection c = Database.getConnection();
-    PreparedStatement ps = c.prepareStatement("UPDATE events SET title=?, description=?, event_ts=?, periodic=?, period_days=? WHERE id=?")) {
+         PreparedStatement ps = c.prepareStatement("UPDATE events SET title=?,description=?,event_ts=?,periodic=?,period_days=? WHERE id=?")) {
       ps.setString(1, e.title);
       ps.setString(2, e.description);
       ps.setLong(3, e.eventTs);
@@ -64,7 +64,7 @@ public class EventDao {
 
   public static Event findById(long id) throws SQLException {
     try (Connection c = Database.getConnection();
-    PreparedStatement ps = c.prepareStatement("SELECT * FROM events WHERE id = ?")) {
+         PreparedStatement ps = c.prepareStatement("SELECT * FROM events WHERE id = ?")) {
       ps.setLong(1, id);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
